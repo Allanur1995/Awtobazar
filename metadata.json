@@ -1,0 +1,6 @@
+{
+  "name": "AwtoBazar",
+  "description": "Türkmenistanyň awtoulaglar, ätiýaçlyk şaýlary, emläk we hyzmatlar bazary.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

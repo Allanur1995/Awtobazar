@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">AwtoBazar</string>
+    <string name="app_tagline">Türkmenistanyň awtoulag we bildiriş bazary</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Baş sahypa</string>
+    <string name="nav_search">Gözleg</string>
+    <string name="nav_add">Goşmak</string>
+    <string name="nav_favorites">Saýlananlar</string>
+    <string name="nav_profile">Profil</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_title">AwtoBazar</string>
+    <string name="auth_subtitle">Türkmenistanda awtoulag, ätiýaçlyk şaýlary, emläk we hyzmatlary tapmak hem satmak üçin iň amatly platforma.</string>
+    <string name="auth_feature_cars">Müňlerçe awtoulag we giňişleýin filtr</string>
+    <string name="auth_feature_post">Bir minutda suratly bildiriş goşmak</string>
+    <string name="auth_feature_safe">Satyjylar bilen göni söwda we teklipler</string>
+    <string name="auth_google_button">Google bilen gir</string>
+    <string name="auth_signing_in">Girilýär...</string>
+    <string name="auth_cancelled">Giriş ýatyryldy. Dowam etmek üçin hasap saýlaň.</string>
+
+    <!-- Categories -->
+    <string name="cat_all">Ählisi</string>
+    <string name="cat_cars">Awtoulaglar</string>
+    <string name="cat_parts">Şaýlar</string>
+    <string name="cat_realestate">Emläk</string>
+    <string name="cat_services">Hyzmatlar</string>
+    <string name="cat_other">Başga</string>
+
+    <!-- Badges & Status -->
+    <string name="badge_vip">VIP</string>
+    <string name="badge_urgent">Gyssagly</string>
+    <string name="badge_new">Täze</string>
+    <string name="status_active">Aktiw</string>
+    <string name="status_paused">Duruzylan</string>
+    <string name="status_sold">Satyldy</string>
+
+    <!-- Home & Search -->
+    <string name="home_vip_title">VIP Bildirişler</string>
+    <string name="home_latest_title">Täze bildirişler</string>
+    <string name="home_hero_cta">Bildiriş goş</string>
+    <string name="home_load_starter">Nusga katalogy ýükle</string>
+    <string name="home_empty_title">Bildiriş tapylmady</string>
+    <string name="home_empty_subtitle">Ilkinji bildirişi goşuň ýa-da taýyn awtoulag katalogyny ýükläň.</string>
+    <string name="search_hint">Marka, model ýa-da söz ýazyň...</string>
+    <string name="filter_reset">Arassala</string>
+    <string name="filter_apply">Görkez</string>
+
+    <!-- Listing Detail & Inquiry -->
+    <string name="detail_specs_title">Häsiýetnamalar</string>
+    <string name="detail_desc_title">Goşmaça maglumat</string>
+    <string name="detail_seller_title">Satyjy</string>
+    <string name="detail_contact_seller">Satyja ýaz / Teklip et</string>
+    <string name="detail_mark_sold">Satyldy diýip belle</string>
+    <string name="detail_edit">Üýtget</string>
+    <string name="detail_delete">Poz</string>
+
+    <!-- Profile -->
+    <string name="profile_my_listings">Bildirişlerim</string>
+    <string name="profile_inquiries">Habarlar</string>
+    <string name="profile_edit">Profili üýtget</string>
+    <string name="profile_sign_out">Çykmak</string>
+    <string name="error_generic">Näsazlyk ýüze çykdy. Täzeden synanyşyň.</string>
+</resources>

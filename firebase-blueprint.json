@@ -1,0 +1,121 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated AwtoBazar user profile and contact preferences.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the user." },
+        "displayName": { "type": "string", "description": "Display name shown on profile and seller alias." },
+        "region": { "type": "string", "description": "Preferred Turkmenistan region or city." },
+        "phone": { "type": "string", "description": "Private phone number kept only in user profile." },
+        "photoUrl": { "type": "string", "description": "Optional Google profile avatar URL." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "displayName", "region", "createdAt", "updatedAt"]
+    },
+    "Listing": {
+      "title": "Listing",
+      "description": "Marketplace listing for vehicles, spare parts, real estate, or services (zero PII).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Author Firebase Auth UID." },
+        "sellerName": { "type": "string", "description": "Public seller alias or display name." },
+        "title": { "type": "string", "description": "Listing headline (e.g. Toyota Camry XSE 2022)." },
+        "category": { "type": "string", "enum": ["cars", "parts", "realestate", "services", "other"], "description": "Marketplace category." },
+        "make": { "type": "string", "description": "Vehicle manufacturer or brand." },
+        "model": { "type": "string", "description": "Vehicle model or item subtype." },
+        "year": { "type": "integer", "description": "Production year." },
+        "priceTmt": { "type": "integer", "description": "Price in Turkmen manat (TMT)." },
+        "mileageKm": { "type": "integer", "description": "Odometer mileage in kilometers." },
+        "transmission": { "type": "string", "description": "Transmission type (Awtomat, Mehanika, Tiptronik, etc.)." },
+        "fuelType": { "type": "string", "description": "Fuel type (Benzin, Gibrid, Dizel, Elektro, Gaz)." },
+        "engineVolume": { "type": "string", "description": "Engine displacement (e.g. 2.5 L, 3.5 L)." },
+        "bodyType": { "type": "string", "description": "Body style (Sedan, Krossover, Ýolsuz, Kupe, Universal)." },
+        "color": { "type": "string", "description": "Exterior color." },
+        "region": { "type": "string", "description": "Velayat or city (Aşgabat, Ahal, Balkan, Daşoguz, Lebap, Mary)." },
+        "description": { "type": "string", "description": "Detailed Turkmen description of condition and features." },
+        "badge": { "type": "string", "enum": ["none", "vip", "urgent", "new"], "description": "Listing highlight badge." },
+        "status": { "type": "string", "enum": ["active", "paused", "sold"], "description": "Lifecycle status." },
+        "negotiable": { "type": "boolean", "description": "Whether price is negotiable (Ylaşykly)." },
+        "tradeAvailable": { "type": "boolean", "description": "Whether trade-in/exchange is accepted (Obmen)." },
+        "creditAvailable": { "type": "boolean", "description": "Whether installment/credit is offered (Kredit)." },
+        "imageKey": { "type": "string", "description": "Fallback showroom drawable key (sedan, suv, luxury, showroom)." },
+        "photoData": { "type": "string", "description": "Optional compressed Base64 JPEG thumbnail uploaded via Photo Picker." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": [
+        "userId", "sellerName", "title", "category", "make", "model",
+        "year", "priceTmt", "mileageKm", "transmission", "fuelType",
+        "engineVolume", "bodyType", "color", "region", "description",
+        "badge", "status", "negotiable", "tradeAvailable", "creditAvailable",
+        "imageKey", "createdAt", "updatedAt"
+      ]
+    },
+    "FavoriteItem": {
+      "title": "FavoriteItem",
+      "description": "User-saved favorite listing snapshot.",
+      "type": "object",
+      "properties": {
+        "listingId": { "type": "string", "description": "Referenced listing document ID." },
+        "title": { "type": "string", "description": "Listing title snapshot." },
+        "category": { "type": "string", "description": "Category key." },
+        "priceTmt": { "type": "integer", "description": "Price in TMT." },
+        "year": { "type": "integer", "description": "Year." },
+        "mileageKm": { "type": "integer", "description": "Mileage in km." },
+        "region": { "type": "string", "description": "Region name." },
+        "imageKey": { "type": "string", "description": "Showroom image key." },
+        "badge": { "type": "string", "description": "Badge key." },
+        "photoData": { "type": "string", "description": "Optional compressed photo thumbnail." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp when saved." }
+      },
+      "required": ["listingId", "title", "category", "priceTmt", "year", "mileageKm", "region", "imageKey", "badge", "createdAt"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Direct buyer-to-seller message or price offer for a listing.",
+      "type": "object",
+      "properties": {
+        "listingId": { "type": "string", "description": "Target listing ID." },
+        "listingTitle": { "type": "string", "description": "Target listing title." },
+        "senderId": { "type": "string", "description": "Buyer UID." },
+        "senderName": { "type": "string", "description": "Buyer display name." },
+        "sellerId": { "type": "string", "description": "Seller UID." },
+        "sellerName": { "type": "string", "description": "Seller display name." },
+        "participantIds": { "type": "array", "description": "Two-element list of [senderId, sellerId]." },
+        "message": { "type": "string", "description": "Buyer message text." },
+        "offerPriceTmt": { "type": "integer", "description": "Optional offered price in TMT (0 if none)." },
+        "contactNote": { "type": "string", "description": "Optional short contact note." },
+        "status": { "type": "string", "enum": ["new", "replied", "closed"], "description": "Inquiry status." },
+        "replyMessage": { "type": "string", "description": "Seller reply message." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": [
+        "listingId", "listingTitle", "senderId", "senderName",
+        "sellerId", "sellerName", "participantIds", "message",
+        "offerPriceTmt", "status", "createdAt", "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private authenticated user profile."
+    },
+    "/users/{userId}/favorites/{listingId}": {
+      "schema": { "$ref": "#/entities/FavoriteItem" },
+      "description": "User's saved favorite listings."
+    },
+    "/listings/{listingId}": {
+      "schema": { "$ref": "#/entities/Listing" },
+      "description": "Marketplace listings catalog."
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/Inquiry" },
+      "description": "Buyer-to-seller inquiries and price offers."
+    }
+  }
+}

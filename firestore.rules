@@ -1,0 +1,233 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidUserProfile(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 60 &&
+             data.region is string && data.region.size() >= 1 && data.region.size() <= 40 &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 30)) &&
+             (!('photoUrl' in data) || (data.photoUrl is string && data.photoUrl.size() <= 500)) &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidListing(data) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.sellerName is string && data.sellerName.size() >= 1 && data.sellerName.size() <= 60 &&
+             data.title is string && data.title.size() >= 2 && data.title.size() <= 120 &&
+             data.category in ['cars', 'parts', 'realestate', 'services', 'other'] &&
+             data.make is string && data.make.size() >= 1 && data.make.size() <= 50 &&
+             data.model is string && data.model.size() >= 1 && data.model.size() <= 50 &&
+             data.year is int && data.year >= 1950 && data.year <= 2030 &&
+             data.priceTmt is int && data.priceTmt >= 0 && data.priceTmt <= 100000000 &&
+             data.mileageKm is int && data.mileageKm >= 0 && data.mileageKm <= 5000000 &&
+             data.transmission is string && data.transmission.size() >= 1 && data.transmission.size() <= 40 &&
+             data.fuelType is string && data.fuelType.size() >= 1 && data.fuelType.size() <= 40 &&
+             data.engineVolume is string && data.engineVolume.size() >= 1 && data.engineVolume.size() <= 20 &&
+             data.bodyType is string && data.bodyType.size() >= 1 && data.bodyType.size() <= 40 &&
+             data.color is string && data.color.size() >= 1 && data.color.size() <= 30 &&
+             data.region is string && data.region.size() >= 1 && data.region.size() <= 40 &&
+             data.description is string && data.description.size() >= 1 && data.description.size() <= 1500 &&
+             data.badge in ['none', 'vip', 'urgent', 'new'] &&
+             data.status in ['active', 'paused', 'sold'] &&
+             data.negotiable is bool &&
+             data.tradeAvailable is bool &&
+             data.creditAvailable is bool &&
+             data.imageKey is string && data.imageKey.size() >= 1 && data.imageKey.size() <= 40 &&
+             (!('photoData' in data) || (data.photoData is string && data.photoData.size() <= 160000)) &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidFavoriteItem(data) {
+      return data.listingId is string && data.listingId.size() >= 1 && data.listingId.size() <= 128 &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.category is string && data.category.size() >= 1 && data.category.size() <= 30 &&
+             data.priceTmt is int && data.priceTmt >= 0 && data.priceTmt <= 100000000 &&
+             data.year is int && data.year >= 1950 && data.year <= 2030 &&
+             data.mileageKm is int && data.mileageKm >= 0 && data.mileageKm <= 5000000 &&
+             data.region is string && data.region.size() >= 1 && data.region.size() <= 40 &&
+             data.imageKey is string && data.imageKey.size() >= 1 && data.imageKey.size() <= 40 &&
+             data.badge is string && data.badge.size() >= 1 && data.badge.size() <= 20 &&
+             (!('photoData' in data) || (data.photoData is string && data.photoData.size() <= 160000)) &&
+             data.createdAt is timestamp && data.createdAt <= request.time;
+    }
+
+    function isValidInquiry(data) {
+      return data.listingId is string && data.listingId.size() >= 1 && data.listingId.size() <= 128 &&
+             data.listingTitle is string && data.listingTitle.size() >= 1 && data.listingTitle.size() <= 120 &&
+             data.senderId is string && data.senderId.size() >= 1 && data.senderId.size() <= 128 &&
+             data.senderName is string && data.senderName.size() >= 1 && data.senderName.size() <= 60 &&
+             data.sellerId is string && data.sellerId.size() >= 1 && data.sellerId.size() <= 128 &&
+             data.sellerName is string && data.sellerName.size() >= 1 && data.sellerName.size() <= 60 &&
+             data.participantIds is list && data.participantIds.size() == 2 &&
+             data.participantIds[0] is string && data.participantIds[1] is string &&
+             data.message is string && data.message.size() >= 1 && data.message.size() <= 500 &&
+             data.offerPriceTmt is int && data.offerPriceTmt >= 0 && data.offerPriceTmt <= 100000000 &&
+             (!('contactNote' in data) || (data.contactNote is string && data.contactNote.size() <= 80)) &&
+             data.status in ['new', 'replied', 'closed'] &&
+             (!('replyMessage' in data) || (data.replyMessage is string && data.replyMessage.size() <= 500)) &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if isOwner(userId);
+
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll(['userId', 'displayName', 'region', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'displayName', 'region', 'phone', 'photoUrl', 'createdAt', 'updatedAt']) &&
+                       isValidUserProfile(incoming());
+
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidUserProfile(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'region', 'phone', 'photoUrl', 'updatedAt']);
+
+      allow delete: if isOwner(userId) && isValidId(userId);
+
+      match /favorites/{listingId} {
+        allow get: if isOwner(userId) && isValidId(listingId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(listingId) &&
+                         incoming().listingId == listingId &&
+                         incoming().keys().hasAll(['listingId', 'title', 'category', 'priceTmt', 'year', 'mileageKm', 'region', 'imageKey', 'badge', 'createdAt']) &&
+                         incoming().keys().hasOnly(['listingId', 'title', 'category', 'priceTmt', 'year', 'mileageKm', 'region', 'imageKey', 'badge', 'photoData', 'createdAt']) &&
+                         isValidFavoriteItem(incoming());
+
+        allow update: if isOwner(userId) &&
+                         isValidId(listingId) &&
+                         isValidFavoriteItem(incoming()) &&
+                         incoming().listingId == existing().listingId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['title', 'priceTmt', 'region', 'badge', 'photoData']);
+
+        allow delete: if isOwner(userId) && isValidId(listingId);
+      }
+    }
+
+    match /listings/{listingId} {
+      allow get: if isSignedIn() &&
+                    isValidId(listingId) &&
+                    (existing().status == 'active' || existing().userId == request.auth.uid);
+
+      allow list: if isSignedIn() &&
+                     (existing().status == 'active' || existing().userId == request.auth.uid);
+
+      allow create: if isSignedIn() &&
+                       isValidId(listingId) &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll([
+                         'userId', 'sellerName', 'title', 'category', 'make', 'model',
+                         'year', 'priceTmt', 'mileageKm', 'transmission', 'fuelType',
+                         'engineVolume', 'bodyType', 'color', 'region', 'description',
+                         'badge', 'status', 'negotiable', 'tradeAvailable', 'creditAvailable',
+                         'imageKey', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'sellerName', 'title', 'category', 'make', 'model',
+                         'year', 'priceTmt', 'mileageKm', 'transmission', 'fuelType',
+                         'engineVolume', 'bodyType', 'color', 'region', 'description',
+                         'badge', 'status', 'negotiable', 'tradeAvailable', 'creditAvailable',
+                         'imageKey', 'photoData', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidListing(incoming());
+
+      allow update: if isSignedIn() &&
+                       isValidId(listingId) &&
+                       isValidListing(incoming()) &&
+                       existing().userId == request.auth.uid &&
+                       existing().status != 'sold' &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'sellerName', 'title', 'category', 'make', 'model',
+                         'year', 'priceTmt', 'mileageKm', 'transmission', 'fuelType',
+                         'engineVolume', 'bodyType', 'color', 'region', 'description',
+                         'badge', 'status', 'negotiable', 'tradeAvailable', 'creditAvailable',
+                         'imageKey', 'photoData', 'updatedAt'
+                       ]);
+
+      allow delete: if isSignedIn() &&
+                       isValidId(listingId) &&
+                       existing().userId == request.auth.uid;
+    }
+
+    match /inquiries/{inquiryId} {
+      allow get: if isSignedIn() &&
+                    isValidId(inquiryId) &&
+                    request.auth.uid in existing().participantIds;
+
+      allow list: if isSignedIn() &&
+                     request.auth.uid in existing().participantIds;
+
+      allow create: if isSignedIn() &&
+                       isValidId(inquiryId) &&
+                       incoming().senderId == request.auth.uid &&
+                       request.auth.uid in incoming().participantIds &&
+                       incoming().sellerId in incoming().participantIds &&
+                       incoming().status == 'new' &&
+                       incoming().keys().hasAll([
+                         'listingId', 'listingTitle', 'senderId', 'senderName',
+                         'sellerId', 'sellerName', 'participantIds', 'message',
+                         'offerPriceTmt', 'status', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'listingId', 'listingTitle', 'senderId', 'senderName',
+                         'sellerId', 'sellerName', 'participantIds', 'message',
+                         'offerPriceTmt', 'contactNote', 'status', 'replyMessage',
+                         'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidInquiry(incoming()) &&
+                       exists(/databases/$(database)/documents/listings/$(incoming().listingId));
+
+      allow update: if isSignedIn() &&
+                       isValidId(inquiryId) &&
+                       isValidInquiry(incoming()) &&
+                       existing().status != 'closed' &&
+                       existing().sellerId == request.auth.uid &&
+                       incoming().senderId == existing().senderId &&
+                       incoming().sellerId == existing().sellerId &&
+                       incoming().listingId == existing().listingId &&
+                       incoming().participantIds == existing().participantIds &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['status', 'replyMessage', 'updatedAt']);
+
+      allow delete: if isSignedIn() &&
+                       isValidId(inquiryId) &&
+                       (existing().senderId == request.auth.uid || existing().sellerId == request.auth.uid);
+    }
+  }
+}
